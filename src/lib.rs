@@ -8,3 +8,4 @@ pub mod contracts;
 pub mod evolution;
 pub mod executable_contract;
 pub mod http;
+pub mod style_selection;
