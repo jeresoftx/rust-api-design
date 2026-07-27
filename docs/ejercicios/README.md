@@ -5,3 +5,4 @@ Las soluciones ejecutables viven en `examples/soluciones/` y se consultan solo
 después de justificar el diseño propio.
 
 - [01. Contratos y límites de una API](01-contratos-y-limites.md)
+- [02. REST y semántica HTTP](02-rest-y-http.md)

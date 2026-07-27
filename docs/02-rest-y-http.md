@@ -194,6 +194,22 @@ Estas pruebas no certifican que una API sea REST. Protegen señales del
 contrato que un consumidor necesita para decidir si puede leer, reintentar o
 esperar.
 
+## Práctica
+
+Los ejercicios del capítulo están en
+[`docs/ejercicios/02-rest-y-http.md`](ejercicios/02-rest-y-http.md). La
+solución ejecutable vive en
+[`examples/soluciones/02-rest-y-http.rs`](../examples/soluciones/02-rest-y-http.rs).
+Primero justifica la interacción en términos de consumidor y después compara
+tu decisión con la solución.
+
+## Benchmark
+
+La decisión de benchmark está registrada en
+[`benches/02-rest-y-http.md`](../benches/02-rest-y-http.md). El modelo no
+representa un handler ni una carga de red, así que medir su creación no
+respondería una pregunta de rendimiento útil.
+
 ## Siguiente paso
 
 El siguiente capítulo trabaja la experiencia del consumidor: errores,

@@ -14,3 +14,7 @@ categories = ["web-programming"]
 [[example]]
 name = "01-contratos-y-limites"
 path = "examples/soluciones/01-contratos-y-limites.rs"
+
+[[example]]
+name = "02-rest-y-http-solucion"
+path = "examples/soluciones/02-rest-y-http.rs"
