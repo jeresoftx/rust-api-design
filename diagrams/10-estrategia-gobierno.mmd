@@ -1,0 +1,9 @@
+flowchart LR
+    C[Capacidad pública] --> O[Dueño identificado]
+    O --> U[Consumidor y propósito]
+    U --> I{Impacto del cambio}
+    I -->|Bajo| A[Verificaciones automatizadas]
+    I -->|Alto| H[Revisión humana]
+    A --> P[Publicar o evolucionar]
+    H --> P
+    P --> M[Métricas de adopción]
