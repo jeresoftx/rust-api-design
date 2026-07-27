@@ -93,11 +93,71 @@ del reemplazo y una forma de detectar que todavía depende de lo obsoleto.
 4. ¿Cuál es el reemplazo exacto y cuánto tiempo coexistirá?
 5. ¿Qué prueba protege la compatibilidad durante la transición?
 
+## Del cambio a la transición
+
+La clasificación no decide por sí sola cómo publicar una API. Decide si un
+consumidor existente puede seguir usando el contrato o necesita una ruta
+explícita para adoptar el comportamiento nuevo.
+
+```mermaid
+flowchart LR
+    C[Cambio propuesto] --> I{Impacto observable}
+    I -->|Compatible| P[Publicar con semántica clara]
+    I -->|Incompatible| D[Plan de deprecación]
+    D --> R[Reemplazo explícito]
+    R --> W[Ventana de coexistencia]
+    W --> A[Evidencia de adopción]
+    A --> S[Retirada planificada]
+```
+
+El archivo fuente está en
+[`diagrams/04-versionado-y-compatibilidad.mmd`](../diagrams/04-versionado-y-compatibilidad.mmd).
+El diagrama no promete que toda transición use una versión nueva; exige que la
+ruptura tenga un reemplazo y una ruta verificable para consumidores.
+
+## Implementación
+
+El módulo [`evolution`](../src/evolution.rs) clasifica `ContractChange` como
+compatible o como cambio que requiere migración. `DeprecationPlan` exige
+comportamiento deprecado, reemplazo y fecha de retirada. `Migration` rechaza
+usar una migración obligatoria para un cambio ya compatible.
+
+El modelo no calcula adopción ni interpreta calendarios. Enseña que cambiar el
+significado de un campo, el orden de una página o un código de error no es un
+refactor local: es una decisión que necesita una promesa de transición.
+
+## Ejemplo: reemplazar un significado ambiguo
+
+```rust
+use rust_api_design::evolution::{ContractChange, DeprecationPlan, Migration};
+
+let plan = DeprecationPlan::new(
+    "estado",
+    "payment_status",
+    "2027-01-01",
+)?;
+let migration = Migration::new(ContractChange::ChangeFieldMeaning, plan)?;
+
+assert_eq!(migration.deprecation().replacement(), "payment_status");
+# Ok::<(), rust_api_design::evolution::EvolutionError>(())
+```
+
+El ejemplo completo está en
+[`examples/04-versionado-y-compatibilidad.rs`](../examples/04-versionado-y-compatibilidad.rs).
+Conservar un nombre y cambiar su significado rompe una decisión previa del
+consumidor; el reemplazo permite adoptar la semántica nueva sin adivinarla.
+
+## Pruebas
+
+Las pruebas clasifican una adición opcional como compatible, exigen plan para
+un cambio de significado y rechazan una migración innecesaria para una
+operación nueva. No prueban todos los consumidores reales; hacen ejecutable la
+distinción que guía una conversación de compatibilidad.
+
 ## Siguiente paso
 
-El modelo Rust del capítulo representará cambios de contrato y su clasificación
-compatible o incompatible. No gestionará versiones HTTP: hará visible la razón
-por la que una migración necesita reemplazo y ventana explícitos.
+El siguiente bloque añade ejercicios, solución y decisión de benchmark. Después
+el curso pasará a contratos ejecutables con OpenAPI.
 
 ## Decisiones registradas
 
