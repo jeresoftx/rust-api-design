@@ -1,0 +1,7 @@
+flowchart LR
+    C[Credencial] --> A{Audiencia válida}
+    A -->|No| U[Solicitar autenticación válida]
+    A -->|Sí| R[Solicitud: sujeto, acción y recurso]
+    R --> P{Capacidad permitida}
+    P -->|Sí| O[Ejecutar operación]
+    P -->|No| D[Denegar sin revelar frontera ajena]
