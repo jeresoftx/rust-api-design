@@ -22,3 +22,7 @@ path = "examples/soluciones/02-rest-y-http.rs"
 [[example]]
 name = "03-experiencia-del-consumidor-solucion"
 path = "examples/soluciones/03-experiencia-del-consumidor.rs"
+
+[[example]]
+name = "04-versionado-y-compatibilidad-solucion"
+path = "examples/soluciones/04-versionado-y-compatibilidad.rs"
