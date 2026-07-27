@@ -10,3 +10,7 @@ keywords = ["api", "rust", "rest", "design"]
 categories = ["web-programming"]
 
 [dependencies]
+
+[[example]]
+name = "01-contratos-y-limites"
+path = "examples/soluciones/01-contratos-y-limites.rs"
