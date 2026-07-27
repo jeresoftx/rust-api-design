@@ -6,3 +6,4 @@ documentadas por capítulo.
 
 - [01. Contratos y límites de una API](01-contratos-y-limites.md)
 - [02. REST y semántica HTTP](02-rest-y-http.md)
+- [03. Errores, validación y paginación](03-experiencia-del-consumidor.md)

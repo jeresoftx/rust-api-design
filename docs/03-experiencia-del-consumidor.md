@@ -191,6 +191,22 @@ página mantenga orden y cursor, y que no pueda prometer un límite menor que su
 elementos. El modelo no prueba consistencia de una base de datos; protege la
 estructura que un consumidor usa para reaccionar.
 
+## Práctica
+
+Los ejercicios están en
+[`docs/ejercicios/03-experiencia-del-consumidor.md`](ejercicios/03-experiencia-del-consumidor.md)
+y la solución ejecutable en
+[`examples/soluciones/03-experiencia-del-consumidor.rs`](../examples/soluciones/03-experiencia-del-consumidor.rs).
+Primero explica la acción que habilita cada error y la estabilidad del orden
+antes de comparar tu solución.
+
+## Benchmark
+
+La decisión de benchmark vive en
+[`benches/03-experiencia-del-consumidor.md`](../benches/03-experiencia-del-consumidor.md).
+El modelo todavía no procesa carga real ni serializa respuestas, por lo que una
+medición sintética no fundamentaría una decisión de diseño.
+
 ## Siguiente paso
 
 El siguiente bloque añade ejercicios, solución y decisión de benchmark. Después
