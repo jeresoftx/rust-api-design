@@ -11,4 +11,5 @@ pub mod http;
 pub mod identity_access;
 pub mod operation_policy;
 pub mod security_boundary;
+pub mod strategy_governance;
 pub mod style_selection;
