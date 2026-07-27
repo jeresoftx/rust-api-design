@@ -155,11 +155,27 @@ que no pueda nacer sin respuestas y que no duplique un estado HTTP. No validan
 un archivo OpenAPI real contra un servidor; protegen las invariantes que deben
 existir antes de integrar ese tipo de herramientas.
 
+## Práctica
+
+Los ejercicios están en
+[`docs/ejercicios/05-contratos-ejecutables.md`](ejercicios/05-contratos-ejecutables.md)
+y la solución ejecutable en
+[`examples/soluciones/05-contratos-ejecutables.rs`](../examples/soluciones/05-contratos-ejecutables.rs).
+Antes de consultar la solución, justifica qué decisión permite tomar cada
+respuesta y qué divergencia descubriría una prueba de contrato.
+
+## Benchmark
+
+La decisión de benchmark está en
+[`benches/05-contratos-ejecutables.md`](../benches/05-contratos-ejecutables.md).
+Crear y validar este modelo en memoria no representa el costo de publicar,
+verificar o evolucionar una API real; una cifra sintética no mejoraría el
+criterio del capítulo.
+
 ## Siguiente paso
 
-El siguiente bloque añadirá práctica, solución ejecutable y una decisión de
-benchmark. Después el curso comparará GraphQL y gRPC con el mismo criterio:
-qué contrato y qué decisión ofrece cada estilo al consumidor.
+El siguiente capítulo compara GraphQL y gRPC con el mismo criterio: qué
+contrato y qué decisión ofrece cada estilo al consumidor.
 
 ## Decisiones registradas
 
