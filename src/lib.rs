@@ -10,4 +10,5 @@ pub mod executable_contract;
 pub mod http;
 pub mod identity_access;
 pub mod operation_policy;
+pub mod security_boundary;
 pub mod style_selection;
