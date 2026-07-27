@@ -1,0 +1,23 @@
+{
+  "course": {
+    "id": "rust-api-design",
+    "title": "API Design en Rust",
+    "repository": "https://github.com/jeresoftx/rust-api-design",
+    "language": "rust",
+    "track": "complementario técnico",
+    "status": "planned",
+    "rfc": "RFC-0001 §10"
+  },
+  "chapters": [
+    { "number": 1, "id": "api_contracts", "title": "Contratos y límites de una API", "slug": "contratos-y-limites", "status": "planned", "document": "docs/01-contratos-y-limites.md", "module": "src/api_contracts.rs", "milestone": "01. Fundamentos de contratos" },
+    { "number": 2, "id": "rest_http", "title": "REST y semántica HTTP", "slug": "rest-y-http", "status": "planned", "document": "docs/02-rest-y-http.md", "module": "src/rest_http.rs", "milestone": "02. REST y HTTP" },
+    { "number": 3, "id": "consumer_experience", "title": "Errores, validación y paginación", "slug": "experiencia-del-consumidor", "status": "planned", "document": "docs/03-experiencia-del-consumidor.md", "module": "src/consumer_experience.rs", "milestone": "03. Experiencia del consumidor" },
+    { "number": 4, "id": "api_evolution", "title": "Versionado y compatibilidad", "slug": "versionado-y-compatibilidad", "status": "planned", "document": "docs/04-versionado-y-compatibilidad.md", "module": "src/api_evolution.rs", "milestone": "04. Evolución de APIs" },
+    { "number": 5, "id": "openapi", "title": "OpenAPI como contrato vivo", "slug": "openapi", "status": "planned", "document": "docs/05-openapi.md", "module": "src/openapi.rs", "milestone": "05. Contratos ejecutables" },
+    { "number": 6, "id": "api_styles", "title": "GraphQL y gRPC", "slug": "graphql-y-grpc", "status": "planned", "document": "docs/06-graphql-y-grpc.md", "module": "src/api_styles.rs", "milestone": "06. Estilos alternativos" },
+    { "number": 7, "id": "api_operations", "title": "Caching, rate limiting y resiliencia", "slug": "operacion-de-apis", "status": "planned", "document": "docs/07-operacion-de-apis.md", "module": "src/api_operations.rs", "milestone": "07. Operación de APIs" },
+    { "number": 8, "id": "identity_access", "title": "Autenticación y autorización", "slug": "identidad-y-acceso", "status": "planned", "document": "docs/08-identidad-y-acceso.md", "module": "src/identity_access.rs", "milestone": "08. Identidad y acceso" },
+    { "number": 9, "id": "api_security", "title": "Seguridad de aplicaciones y OWASP", "slug": "seguridad-de-apis", "status": "planned", "document": "docs/09-seguridad-de-apis.md", "module": "src/api_security.rs", "milestone": "09. Seguridad de APIs" },
+    { "number": 10, "id": "api_strategy", "title": "Estrategia de APIs para sistemas reales", "slug": "estrategia-de-apis", "status": "planned", "document": "docs/10-estrategia-de-apis.md", "module": "src/api_strategy.rs", "milestone": "10. Estrategia y gobierno" }
+  ]
+}
