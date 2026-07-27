@@ -104,12 +104,82 @@ como si fuera el estado actual ni silencia un resultado parcial.
 5. ¿Qué métrica mostraría que un timeout está protegiendo al sistema o solo
    desplazando la falla?
 
+## De la capacidad a la recuperación
+
+Una misma solicitud puede necesitar responder desde cache, indicar que el
+presupuesto se agotó o rechazar un reintento inseguro. La política no elimina
+la falla: da al consumidor una respuesta honesta y una acción concreta sin
+duplicar trabajo ni efectos de negocio.
+
+```mermaid
+flowchart LR
+    S[Solicitud] --> C{Respuesta cacheable y fresca}
+    C -->|Sí| R[Responder con alcance declarado]
+    C -->|No| L{Presupuesto disponible}
+    L -->|No| A[Indicar espera recuperable]
+    L -->|Sí| D[Ejecutar capacidad]
+    D --> F{Falla transitoria}
+    F -->|No| R
+    F -->|Sí y segura| T[Reintentar con límite]
+    F -->|Sí e insegura| E[Exponer incertidumbre]
+```
+
+El archivo fuente está en
+[`diagrams/07-operacion-de-apis.mmd`](../diagrams/07-operacion-de-apis.mmd).
+El flujo no sustituye el criterio de negocio: hace visible que la recuperación
+depende de la frescura de datos, el presupuesto disponible y la semántica de
+repetición.
+
+## Implementación
+
+El módulo [`operation_policy`](../src/operation_policy.rs) representa una
+`OperationPolicy` por `CachePolicy`, `RateLimit`, seguridad de la operación y
+`RetryRule`. Una política compartida o privada exige frescura positiva;
+`RateLimit` conserva el tiempo de espera que permite recuperar la solicitud.
+
+El constructor rechaza reintentos automáticos para una operación no
+idempotente. No guarda respuestas, cuenta solicitudes ni detecta fallas
+transitorias: modela las condiciones que una implementación de cache, proxy o
+cliente debe mantener para no inventar un éxito ni duplicar un efecto.
+
+## Ejemplo: cachear sin repetir efectos
+
+```rust
+use rust_api_design::operation_policy::{
+    CachePolicy, OperationPolicy, OperationSafety, RateLimit, RetryRule,
+};
+
+let catalog = OperationPolicy::new(
+    CachePolicy::Shared {
+        max_age_seconds: 300,
+    },
+    RateLimit::new(120, 60, 10)?,
+    OperationSafety::ReadOnly,
+    RetryRule::OnTransientFailure,
+)?;
+
+assert_eq!(catalog.rate_limit().retry_after_seconds(), 10);
+# Ok::<(), rust_api_design::operation_policy::OperationPolicyError>(())
+```
+
+El ejemplo ejecutable está en
+[`examples/07-operacion-de-apis.rs`](../examples/07-operacion-de-apis.rs).
+El catálogo puede reutilizar datos durante cinco minutos y repetir una lectura
+transitoria; la misma política no autorizaría reintentar una reserva o pago sin
+una garantía de idempotencia.
+
+## Pruebas
+
+Las pruebas aceptan una política de catálogo con frescura y espera declaradas.
+También rechazan cache sin frescura y reintentos para operaciones no
+idempotentes. No prueban una red real; protegen las condiciones previas que
+evitan entregar datos engañosos o duplicar efectos bajo presión.
+
 ## Siguiente paso
 
-El modelo Rust del capítulo representará una política operativa por capacidad:
-frescura de cache, presupuesto de solicitudes y regla de reintento. No
-implementará un proxy ni un algoritmo distribuido; hará visibles los límites
-que una implementación real debe sostener.
+El siguiente bloque añadirá práctica, solución ejecutable y una decisión de
+benchmark. Después el curso abordará identidad y acceso como fronteras que
+también forman parte del contrato de una API.
 
 ## Decisiones registradas
 

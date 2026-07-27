@@ -1,0 +1,10 @@
+flowchart LR
+    S[Solicitud] --> C{Respuesta cacheable y fresca}
+    C -->|Sí| R[Responder con alcance declarado]
+    C -->|No| L{Presupuesto disponible}
+    L -->|No| A[Indicar espera recuperable]
+    L -->|Sí| D[Ejecutar capacidad]
+    D --> F{Falla transitoria}
+    F -->|No| R
+    F -->|Sí y segura| T[Reintentar con límite]
+    F -->|Sí e insegura| E[Exponer incertidumbre]
