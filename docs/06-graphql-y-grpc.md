@@ -165,11 +165,26 @@ flujo. También rechazan GraphQL sin presupuesto y una interacción que no
 corresponde al estilo. No miden rendimiento de un transporte real; protegen el
 criterio que debe existir antes de incorporar uno.
 
+## Práctica
+
+Los ejercicios están en
+[`docs/ejercicios/06-estilos-alternativos.md`](ejercicios/06-estilos-alternativos.md)
+y la solución ejecutable en
+[`examples/soluciones/06-estilos-alternativos.rs`](../examples/soluciones/06-estilos-alternativos.rs).
+Antes de consultar la solución, justifica qué interacción sostiene el estilo y
+qué límite evita que la integración se convierta en una promesa indefinida.
+
+## Benchmark
+
+La decisión de benchmark está en
+[`benches/06-estilos-alternativos.md`](../benches/06-estilos-alternativos.md).
+El modelo elige contratos en memoria; medirlo no responde una pregunta sobre
+latencia de resolvers, serialización o presión de streaming en producción.
+
 ## Siguiente paso
 
-El siguiente bloque añadirá práctica, solución ejecutable y una decisión de
-benchmark. Después el curso estudiará cómo operar APIs bajo carga, límites y
-fallas sin romper sus contratos.
+El siguiente capítulo estudia cómo operar APIs bajo carga, límites y fallas sin
+romper sus contratos.
 
 ## Decisiones registradas
 
