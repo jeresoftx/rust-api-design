@@ -1,0 +1,8 @@
+flowchart LR
+    D[Decisión de dominio] --> O[Operación declarada]
+    O --> R[Respuestas y errores]
+    R --> I[Implementación HTTP]
+    O --> V[Verificación de contrato]
+    I --> V
+    V -->|Coinciden| C[Consumidor integra con confianza]
+    V -->|Difieren| D
