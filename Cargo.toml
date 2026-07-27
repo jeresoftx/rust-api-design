@@ -38,3 +38,7 @@ path = "examples/soluciones/06-estilos-alternativos.rs"
 [[example]]
 name = "07-operacion-de-apis-solucion"
 path = "examples/soluciones/07-operacion-de-apis.rs"
+
+[[example]]
+name = "08-identidad-y-acceso-solucion"
+path = "examples/soluciones/08-identidad-y-acceso.rs"

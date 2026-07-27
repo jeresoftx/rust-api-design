@@ -144,11 +144,26 @@ sin la capacidad necesaria y rechazan una credencial destinada a otra
 audiencia. No sustituyen políticas reales; protegen las fronteras mínimas que
 una integración debe conservar.
 
+## Práctica
+
+Los ejercicios están en
+[`docs/ejercicios/08-identidad-y-acceso.md`](ejercicios/08-identidad-y-acceso.md)
+y la solución ejecutable en
+[`examples/soluciones/08-identidad-y-acceso.rs`](../examples/soluciones/08-identidad-y-acceso.rs).
+Antes de consultar la solución, justifica qué capacidad se concede y qué dato
+debe ocultar una denegación entre recursos de organizaciones distintas.
+
+## Benchmark
+
+La decisión de benchmark está en
+[`benches/08-identidad-y-acceso.md`](../benches/08-identidad-y-acceso.md).
+El modelo evalúa texto y decisiones en memoria; medirlo no modifica una
+decisión sobre permisos, vigencia ni auditoría.
+
 ## Siguiente paso
 
-El siguiente bloque añadirá práctica, solución ejecutable y una decisión de
-benchmark. Después el curso abordará seguridad de APIs y las amenazas que
-estas fronteras deben resistir.
+El siguiente capítulo aborda seguridad de APIs y las amenazas que estas
+fronteras deben resistir.
 
 ## Decisiones registradas
 

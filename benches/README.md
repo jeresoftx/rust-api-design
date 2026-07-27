@@ -11,3 +11,4 @@ documentadas por capítulo.
 - [05. Contratos ejecutables](05-contratos-ejecutables.md)
 - [06. Estilos alternativos](06-estilos-alternativos.md)
 - [07. Operación de APIs](07-operacion-de-apis.md)
+- [08. Identidad y acceso](08-identidad-y-acceso.md)
