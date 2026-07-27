@@ -1,3 +1,7 @@
 # Benchmarks
 
-Los benchmarks se agregan cuando respondan una pregunta de costo relevante.
+Los benchmarks se agregan solo cuando responden una pregunta de costo
+relevante. Cuando no aplica medir, la decisión y su justificación quedan
+documentadas por capítulo.
+
+- [01. Contratos y límites de una API](01-contratos-y-limites.md)

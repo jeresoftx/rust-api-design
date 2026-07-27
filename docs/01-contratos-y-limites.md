@@ -233,6 +233,28 @@ parte de la verificación del crate. La prueba no certifica que toda API esté
 bien diseñada; confirma que las invariantes didácticas de este modelo siguen
 vigentes.
 
+## Práctica
+
+Los ejercicios del capítulo están en
+[`docs/ejercicios/01-contratos-y-limites.md`](ejercicios/01-contratos-y-limites.md).
+Empiezan por distinguir una promesa de un detalle interno y terminan con la
+declaración de un contrato para registrar un pago. La solución ejecutable está
+en
+[`examples/soluciones/01-contratos-y-limites.rs`](../examples/soluciones/01-contratos-y-limites.rs).
+
+No se debe copiar la solución antes de poder justificar cada campo, error y
+límite privado. La meta es aprender a sostener una integración, no completar
+una estructura por imitación.
+
+## Benchmark
+
+La decisión de benchmark del capítulo está registrada en
+[`benches/01-contratos-y-limites.md`](../benches/01-contratos-y-limites.md).
+No se incorpora una medición de tiempo todavía: el modelo no representa una
+ruta de producción ni hay una hipótesis de rendimiento que un benchmark pueda
+confirmar. Medir construcción de `String` y `Vec` sin una carga real daría una
+cifra precisa pero sin decisión de diseño detrás.
+
 ## Siguiente paso
 
 Los siguientes capítulos aplicarán esta frontera a semántica HTTP, errores,
