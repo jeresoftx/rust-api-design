@@ -4,3 +4,4 @@
 //! pruebas y revisión humana diferida.
 
 pub mod contracts;
+pub mod http;
