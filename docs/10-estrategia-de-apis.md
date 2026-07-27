@@ -58,11 +58,67 @@ evolución. Este curso adopta la tercera alternativa.
 4. ¿Qué regla puede automatizarse y cuál exige criterio humano?
 5. ¿Cómo se retira una capacidad sin abandonar a sus consumidores?
 
+## De la capacidad a la decisión
+
+El gobierno empieza al identificar quién sostiene una capacidad y para quién
+existe. Un cambio de bajo impacto puede validarse con reglas repetibles; uno
+de alto impacto requiere revisión humana porque modifica una promesa que otros
+equipos, datos u operaciones ya pueden estar usando.
+
+```mermaid
+flowchart LR
+    C[Capacidad pública] --> O[Dueño identificado]
+    O --> U[Consumidor y propósito]
+    U --> I{Impacto del cambio}
+    I -->|Bajo| A[Verificaciones automatizadas]
+    I -->|Alto| H[Revisión humana]
+    A --> P[Publicar o evolucionar]
+    H --> P
+    P --> M[Métricas de adopción]
+```
+
+El archivo fuente está en
+[`diagrams/10-estrategia-gobierno.mmd`](../diagrams/10-estrategia-gobierno.mmd).
+La revisión humana no reemplaza la automatización: atiende la semántica y el
+riesgo que una comprobación mecánica no puede decidir.
+
+## Implementación
+
+El módulo [`strategy_governance`](../src/strategy_governance.rs) representa
+una `ApiCapability` por dueño, consumidor e impacto. El constructor rechaza
+capacidades huérfanas y `requires_human_review` deja visible la diferencia
+entre cambios de bajo y alto impacto.
+
+El modelo no administra un catálogo ni asigna revisores. Enseña que publicar
+una capacidad sin responsable o consumidor explícito vuelve más difícil
+evolucionar, medir adopción y reparar una promesa rota.
+
+## Ejemplo: elevar un cambio de alto impacto
+
+```rust
+use rust_api_design::strategy_governance::{ApiCapability, ChangeImpact};
+
+let payments = ApiCapability::new("payments", "mobile", ChangeImpact::High)?;
+
+assert!(payments.requires_human_review());
+# Ok::<(), rust_api_design::strategy_governance::GovernanceError>(())
+```
+
+El ejemplo ejecutable está en
+[`examples/10-estrategia-gobierno.rs`](../examples/10-estrategia-gobierno.rs).
+El impacto no mide líneas de código: identifica cuándo una promesa pública
+necesita una decisión responsable antes de cambiar.
+
+## Pruebas
+
+Las pruebas exigen dueño, distinguen impacto bajo de alto y marcan el segundo
+para revisión humana. No sustituyen el juicio del revisor; protegen la
+información mínima que permite convocarlo en el momento adecuado.
+
 ## Siguiente paso
 
-El modelo Rust del capítulo representará una capacidad estratégica por dueño,
-consumidor y nivel de cambio. No construirá un portal de gobierno; hará visible
-que una API pública necesita responsabilidad y una ruta explícita de evolución.
+El siguiente bloque añadirá práctica, solución ejecutable y una decisión de
+benchmark antes del cierre editorial del curso.
 
 ## Decisiones registradas
 
