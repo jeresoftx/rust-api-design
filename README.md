@@ -19,6 +19,9 @@ El curso está en `draft`. Los capítulos, ejemplos y prácticas están preparad
 para revisión humana; el contenido no está publicado. La revisión humana es
 obligatoria antes de usar `reviewed` o `published`.
 
+La [candidata de publicación](PUBLICATION_CANDIDATE.md) registra las
+verificaciones que debe revisar una persona antes de cualquier publicación.
+
 ## Cómo verificarlo
 
 ```bash
