@@ -86,11 +86,80 @@ estructura verificable y explicación de intención.
 4. ¿Cómo detectaríamos una divergencia entre contrato e implementación?
 5. ¿Qué cambio del documento requeriría una migración de consumidores?
 
+## Del diseño a la verificación
+
+El contrato vive entre una decisión de diseño y el comportamiento que un
+consumidor puede observar. Primero se declara la operación y sus respuestas;
+después se implementa el comportamiento; finalmente una comprobación compara
+ambas superficies. Si aparece una diferencia, no se corrige a ciegas el YAML o
+el handler: se vuelve a decidir qué promesa debe ofrecer la API.
+
+```mermaid
+flowchart LR
+    D[Decisión de dominio] --> O[Operación declarada]
+    O --> R[Respuestas y errores]
+    R --> I[Implementación HTTP]
+    O --> V[Verificación de contrato]
+    I --> V
+    V -->|Coinciden| C[Consumidor integra con confianza]
+    V -->|Difieren| D
+```
+
+El archivo fuente está en
+[`diagrams/05-contratos-ejecutables.mmd`](../diagrams/05-contratos-ejecutables.mmd).
+El ciclo termina en la decisión de dominio porque una herramienta puede señalar
+la divergencia, pero no decide qué semántica es correcta para el consumidor.
+
+## Implementación
+
+El módulo [`executable_contract`](../src/executable_contract.rs) representa
+una `OperationSpec` por identificador, método HTTP, ruta y respuestas
+declaradas. Cada `DeclaredResponse` conserva el estado y una descripción que
+hace visible su intención.
+
+El constructor rechaza una ruta sin `/`, una operación sin respuestas y estados
+HTTP duplicados. No intenta interpretar todo OpenAPI ni generar un servidor:
+modela el mínimo que permite preguntar si una operación promete resultados
+completos y distinguibles para quien la consume.
+
+## Ejemplo: declarar antes de implementar
+
+```rust
+use rust_api_design::executable_contract::{DeclaredResponse, OperationSpec};
+use rust_api_design::http::{HttpMethod, HttpStatus};
+
+let operation = OperationSpec::new(
+    "getPayment",
+    HttpMethod::Get,
+    "/payments/{payment_id}",
+    vec![
+        DeclaredResponse::new(HttpStatus::Ok, "Pago encontrado")?,
+        DeclaredResponse::new(HttpStatus::NotFound, "Pago no encontrado")?,
+    ],
+)?;
+
+assert_eq!(operation.responses().len(), 2);
+# Ok::<(), rust_api_design::executable_contract::ContractSpecError>(())
+```
+
+El ejemplo ejecutable está en
+[`examples/05-contratos-ejecutables.rs`](../examples/05-contratos-ejecutables.rs).
+La operación no presupone que toda solicitud termina en éxito: declara el
+resultado esperado y el caso que permite al consumidor decidir que el pago no
+existe.
+
+## Pruebas
+
+Las pruebas verifican que una operación conserve respuestas de éxito y error,
+que no pueda nacer sin respuestas y que no duplique un estado HTTP. No validan
+un archivo OpenAPI real contra un servidor; protegen las invariantes que deben
+existir antes de integrar ese tipo de herramientas.
+
 ## Siguiente paso
 
-El modelo Rust del capítulo representará una operación descrita por método,
-ruta y respuestas declaradas. No intentará analizar OpenAPI completo; hará
-visible qué mínimos necesita un contrato para ser verificable.
+El siguiente bloque añadirá práctica, solución ejecutable y una decisión de
+benchmark. Después el curso comparará GraphQL y gRPC con el mismo criterio:
+qué contrato y qué decisión ofrece cada estilo al consumidor.
 
 ## Decisiones registradas
 
