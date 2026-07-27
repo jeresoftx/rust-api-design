@@ -30,3 +30,7 @@ path = "examples/soluciones/04-versionado-y-compatibilidad.rs"
 [[example]]
 name = "05-contratos-ejecutables-solucion"
 path = "examples/soluciones/05-contratos-ejecutables.rs"
+
+[[example]]
+name = "06-estilos-alternativos-solucion"
+path = "examples/soluciones/06-estilos-alternativos.rs"
