@@ -1,0 +1,10 @@
+flowchart LR
+    N[Necesidad del consumidor] --> I{Interacción principal}
+    I -->|Recurso interoperable| R[REST y frontera de solicitud]
+    I -->|Vista compuesta| G[GraphQL y presupuesto de consulta]
+    I -->|Llamada tipada| C[gRPC y frontera de llamada]
+    I -->|Stream| S[gRPC y ventana de flujo]
+    G --> O[Observar costo y errores]
+    C --> O
+    S --> O
+    R --> O

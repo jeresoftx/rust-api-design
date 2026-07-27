@@ -93,12 +93,83 @@ servicio interno en una interfaz adecuada para todo consumidor.
 4. ¿Qué consumidores perderían interoperabilidad si una capacidad dejara HTTP?
 5. ¿Cómo detectaríamos una dependencia lenta detrás de un resolver o stream?
 
+## De la interacción al estilo
+
+La decisión empieza con lo que el consumidor necesita resolver, no con el
+framework que el proveedor prefiere operar. Una vista que reúne relaciones
+puede justificar GraphQL si su costo queda acotado; un flujo entre servicios
+puede justificar gRPC si conserva control de presión y cancelación. Si la
+capacidad sigue siendo un recurso interoperable, REST puede conservar una
+frontera de solicitud explícita.
+
+```mermaid
+flowchart LR
+    N[Necesidad del consumidor] --> I{Interacción principal}
+    I -->|Recurso interoperable| R[REST y frontera de solicitud]
+    I -->|Vista compuesta| G[GraphQL y presupuesto de consulta]
+    I -->|Llamada tipada| C[gRPC y frontera de llamada]
+    I -->|Stream| S[gRPC y ventana de flujo]
+    G --> O[Observar costo y errores]
+    C --> O
+    S --> O
+    R --> O
+```
+
+El archivo fuente está en
+[`diagrams/06-estilos-alternativos.mmd`](../diagrams/06-estilos-alternativos.mmd).
+El diagrama no convierte la selección en una regla mecánica: obliga a declarar
+la interacción y el límite que el proveedor puede sostener.
+
+## Implementación
+
+El módulo [`style_selection`](../src/style_selection.rs) modela una
+`StyleSelection` por estilo, interacción y límite de contrato. `ApiStyle`
+expresa REST, GraphQL y gRPC; `ConsumerInteraction` expresa la necesidad del
+consumidor; `ContractLimit` hace visible el control de costo esperado.
+
+Una vista compuesta con GraphQL exige un `QueryBudget` positivo. Un stream con
+gRPC exige una `StreamWindow` con al menos un mensaje en vuelo. El modelo
+también rechaza una combinación que no corresponde, como pedir streaming bajo
+un estilo REST. No implementa resolvers, Protocol Buffers ni transporte: hace
+verificable la decisión que esos componentes deben respetar.
+
+## Ejemplo: límite antes de flexibilidad
+
+```rust
+use rust_api_design::style_selection::{
+    ApiStyle, ConsumerInteraction, ContractLimit, StyleSelection,
+};
+
+let catalog = StyleSelection::new(
+    ApiStyle::GraphQl,
+    ConsumerInteraction::ComposedView,
+    ContractLimit::QueryBudget {
+        max_depth: 4,
+        max_fields: 40,
+    },
+)?;
+
+assert_eq!(catalog.style(), ApiStyle::GraphQl);
+# Ok::<(), rust_api_design::style_selection::StyleSelectionError>(())
+```
+
+El ejemplo ejecutable está en
+[`examples/06-estilos-alternativos.rs`](../examples/06-estilos-alternativos.rs).
+La vista compuesta no se justifica solo porque el cliente puede pedir campos:
+el presupuesto declara que la flexibilidad tiene una frontera operable.
+
+## Pruebas
+
+Las pruebas aceptan una vista GraphQL acotada y un stream gRPC con ventana de
+flujo. También rechazan GraphQL sin presupuesto y una interacción que no
+corresponde al estilo. No miden rendimiento de un transporte real; protegen el
+criterio que debe existir antes de incorporar uno.
+
 ## Siguiente paso
 
-El modelo Rust del capítulo representará una elección de estilo con la
-interacción que la justifica y los límites que debe sostener. No implementará
-un servidor GraphQL ni gRPC: hará explícito que el transporte no sustituye un
-contrato observable.
+El siguiente bloque añadirá práctica, solución ejecutable y una decisión de
+benchmark. Después el curso estudiará cómo operar APIs bajo carga, límites y
+fallas sin romper sus contratos.
 
 ## Decisiones registradas
 
