@@ -1,0 +1,8 @@
+flowchart LR
+    C[Cambio propuesto] --> I{Impacto observable}
+    I -->|Compatible| P[Publicar con semántica clara]
+    I -->|Incompatible| D[Plan de deprecación]
+    D --> R[Reemplazo explícito]
+    R --> W[Ventana de coexistencia]
+    W --> A[Evidencia de adopción]
+    A --> S[Retirada planificada]
