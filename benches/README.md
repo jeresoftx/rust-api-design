@@ -10,3 +10,4 @@ documentadas por capítulo.
 - [04. Versionado y compatibilidad](04-versionado-y-compatibilidad.md)
 - [05. Contratos ejecutables](05-contratos-ejecutables.md)
 - [06. Estilos alternativos](06-estilos-alternativos.md)
+- [07. Operación de APIs](07-operacion-de-apis.md)
