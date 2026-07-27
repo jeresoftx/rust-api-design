@@ -1,0 +1,8 @@
+flowchart LR
+    R[Solicitud] --> V{Validación}
+    V -->|Inválida| E[Código y detalle por campo]
+    E --> C[Consumidor corrige]
+    V -->|Válida| P[Page con orden estable]
+    P --> N{next_cursor}
+    N -->|Presente| Q[Consulta siguiente página]
+    N -->|Ausente| F[Recorrido terminado]
