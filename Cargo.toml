@@ -18,3 +18,7 @@ path = "examples/soluciones/01-contratos-y-limites.rs"
 [[example]]
 name = "02-rest-y-http-solucion"
 path = "examples/soluciones/02-rest-y-http.rs"
+
+[[example]]
+name = "03-experiencia-del-consumidor-solucion"
+path = "examples/soluciones/03-experiencia-del-consumidor.rs"
