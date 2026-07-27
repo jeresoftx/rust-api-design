@@ -115,10 +115,25 @@ Las pruebas exigen dueño, distinguen impacto bajo de alto y marcan el segundo
 para revisión humana. No sustituyen el juicio del revisor; protegen la
 información mínima que permite convocarlo en el momento adecuado.
 
+## Práctica
+
+Los ejercicios están en
+[`docs/ejercicios/10-estrategia-gobierno.md`](ejercicios/10-estrategia-gobierno.md)
+y la solución ejecutable en
+[`examples/soluciones/10-estrategia-gobierno.rs`](../examples/soluciones/10-estrategia-gobierno.rs).
+Antes de consultar la solución, explica qué evidencia de adopción necesitarías
+antes de retirar la capacidad o cambiar su contrato.
+
+## Benchmark
+
+La decisión de benchmark está en
+[`benches/10-estrategia-gobierno.md`](../benches/10-estrategia-gobierno.md).
+El modelo construye decisiones en memoria; medirlo no decide propiedad,
+impacto ni revisión humana.
+
 ## Siguiente paso
 
-El siguiente bloque añadirá práctica, solución ejecutable y una decisión de
-benchmark antes del cierre editorial del curso.
+El siguiente bloque prepara el cierre editorial del curso.
 
 ## Decisiones registradas
 
