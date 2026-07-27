@@ -1,0 +1,7 @@
+flowchart LR
+    I[Entrada no confiable] --> V{Forma y tamaño válidos}
+    V -->|No| S[Mensaje seguro de rechazo]
+    V -->|Sí| A{Acción y recurso autorizados}
+    A -->|No| D[Denegación sin datos ajenos]
+    A -->|Sí| E[Ejecutar capacidad]
+    E --> L[Registrar señal sin secreto]
