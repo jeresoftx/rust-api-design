@@ -1,0 +1,13 @@
+[book]
+title = "API Design en Rust"
+description = "Diseño de APIs en Rust para ingenieros de software."
+authors = ["Jeresoft Academy"]
+language = "es-MX"
+src = "docs"
+
+[build]
+build-dir = "book"
+
+[output.html]
+git-repository-url = "https://github.com/jeresoftx/rust-api-design"
+edit-url-template = "https://github.com/jeresoftx/rust-api-design/edit/main/{path}"
