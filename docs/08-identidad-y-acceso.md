@@ -84,12 +84,71 @@ credencial destinada a otro consumidor.
 4. ¿Qué dato no debe aparecer en una denegación entre organizaciones?
 5. ¿Qué decisión de acceso necesita auditoría y por cuánto tiempo?
 
+## De la credencial a la capacidad
+
+La autenticación verifica si la credencial sirve para esta API; la autorización
+evalúa después la acción sobre el recurso. Separar ambas etapas evita que una
+sesión válida se convierta en permiso general y permite denegar sin describir
+datos ajenos.
+
+```mermaid
+flowchart LR
+    C[Credencial] --> A{Audiencia válida}
+    A -->|No| U[Solicitar autenticación válida]
+    A -->|Sí| R[Solicitud: sujeto, acción y recurso]
+    R --> P{Capacidad permitida}
+    P -->|Sí| O[Ejecutar operación]
+    P -->|No| D[Denegar sin revelar frontera ajena]
+```
+
+El archivo fuente está en
+[`diagrams/08-identidad-y-acceso.mmd`](../diagrams/08-identidad-y-acceso.mmd).
+La audiencia verifica el destino de la credencial; no responde todavía si la
+identidad puede realizar la acción solicitada.
+
+## Implementación
+
+El módulo [`identity_access`](../src/identity_access.rs) representa una
+`Credential` por sujeto y audiencia, una `AccessRequest` por acción y recurso,
+y una `AccessDecision` explícita. La función `decide` rechaza una audiencia
+distinta y después permite o deniega la capacidad configurada.
+
+El modelo no valida tokens ni guarda permisos en una base de datos. Hace
+observable la distinción educativa: una credencial de `ana` para esta API puede
+ser válida, pero `ana` solo recibe la acción que la política autoriza.
+
+## Ejemplo: identidad no equivale a permiso
+
+```rust
+use rust_api_design::identity_access::{
+    decide, AccessDecision, AccessRequest, Action, Credential,
+};
+
+let credential = Credential::new("ana", "payments-api")?;
+let request = AccessRequest::new(credential, Action::Update, "payment:123")?;
+
+let decision = decide(&request, "payments-api", "ana", Action::Read)?;
+assert_eq!(decision, AccessDecision::Denied);
+# Ok::<(), rust_api_design::identity_access::AccessError>(())
+```
+
+El ejemplo ejecutable está en
+[`examples/08-identidad-y-acceso.rs`](../examples/08-identidad-y-acceso.rs).
+La denegación no discute la identidad de Ana: muestra que estar autenticada no
+concede la capacidad de actualizar ese pago.
+
+## Pruebas
+
+Las pruebas permiten la acción autorizada, deniegan una identidad autenticada
+sin la capacidad necesaria y rechazan una credencial destinada a otra
+audiencia. No sustituyen políticas reales; protegen las fronteras mínimas que
+una integración debe conservar.
+
 ## Siguiente paso
 
-El modelo Rust del capítulo representará una solicitud de acceso por sujeto,
-acción y recurso, junto con una decisión explícita. No validará JWT ni llamará
-a un proveedor externo; hará visible que una identidad autenticada no equivale
-a autorización automática.
+El siguiente bloque añadirá práctica, solución ejecutable y una decisión de
+benchmark. Después el curso abordará seguridad de APIs y las amenazas que
+estas fronteras deben resistir.
 
 ## Decisiones registradas
 
