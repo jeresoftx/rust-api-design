@@ -13,3 +13,4 @@ documentadas por capítulo.
 - [07. Operación de APIs](07-operacion-de-apis.md)
 - [08. Identidad y acceso](08-identidad-y-acceso.md)
 - [09. Seguridad de APIs](09-seguridad-de-apis.md)
+- [10. Estrategia y gobierno](10-estrategia-gobierno.md)

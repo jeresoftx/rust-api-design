@@ -46,3 +46,7 @@ path = "examples/soluciones/08-identidad-y-acceso.rs"
 [[example]]
 name = "09-seguridad-de-apis-solucion"
 path = "examples/soluciones/09-seguridad-de-apis.rs"
+
+[[example]]
+name = "10-estrategia-gobierno-solucion"
+path = "examples/soluciones/10-estrategia-gobierno.rs"
