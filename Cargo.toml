@@ -26,3 +26,7 @@ path = "examples/soluciones/03-experiencia-del-consumidor.rs"
 [[example]]
 name = "04-versionado-y-compatibilidad-solucion"
 path = "examples/soluciones/04-versionado-y-compatibilidad.rs"
+
+[[example]]
+name = "05-contratos-ejecutables-solucion"
+path = "examples/soluciones/05-contratos-ejecutables.rs"
