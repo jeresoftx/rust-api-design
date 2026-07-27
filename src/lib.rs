@@ -6,4 +6,5 @@
 pub mod consumer;
 pub mod contracts;
 pub mod evolution;
+pub mod executable_contract;
 pub mod http;
