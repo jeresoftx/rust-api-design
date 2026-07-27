@@ -124,12 +124,78 @@ accionable en lugar de repetir o saltar elementos en silencio.
 4. ¿Cuál es el orden estable que sostiene una continuación de página?
 5. ¿Qué ocurre cuando un cursor ya no es válido para la consulta original?
 
+## Del error a la siguiente decisión
+
+La experiencia del consumidor se vuelve predecible cuando cada respuesta le
+permite elegir una acción: corregir una entrada, detener un flujo o continuar
+una colección con el mismo orden declarado.
+
+```mermaid
+flowchart LR
+    R[Solicitud] --> V{Validación}
+    V -->|Inválida| E[Código y detalle por campo]
+    E --> C[Consumidor corrige]
+    V -->|Válida| P[Page con orden estable]
+    P --> N{next_cursor}
+    N -->|Presente| Q[Consulta siguiente página]
+    N -->|Ausente| F[Recorrido terminado]
+```
+
+El archivo fuente está en
+[`diagrams/03-experiencia-del-consumidor.mmd`](../diagrams/03-experiencia-del-consumidor.mmd).
+Un cursor no explica la consulta ni el almacenamiento: solo permite continuar
+la misma intención bajo las reglas que el proveedor declaró.
+
+## Implementación
+
+El módulo [`consumer`](../src/consumer.rs) representa un `ApiError` con código
+estable, mensaje y `ValidationDetail` seguro. También representa `Page<T>` con
+elementos, límite, `StableOrder` y `Cursor` opcional. El constructor rechaza un
+límite cero o una página que contiene más elementos de los prometidos.
+
+El modelo no serializa JSON ni firma cursores. Mantiene el foco en la promesa:
+un consumidor puede localizar un error y recorrer una página sin interpretar
+detalles internos.
+
+## Ejemplo: corregir y continuar
+
+```rust
+use rust_api_design::consumer::{ApiError, Cursor, Page, StableOrder, ValidationDetail};
+
+let error = ApiError::new(
+    "importe_invalido",
+    "El importe debe ser positivo.",
+    vec![ValidationDetail::new("importe", "mayor que cero")?],
+)?;
+assert_eq!(error.details()[0].field(), "importe");
+
+let page = Page::new(
+    vec!["pago-1", "pago-2"],
+    2,
+    StableOrder::new("created_at asc, id asc")?,
+    Some(Cursor::new("continuacion-opaca")?),
+)?;
+assert_eq!(page.next_cursor().unwrap().as_str(), "continuacion-opaca");
+# Ok::<(), rust_api_design::consumer::ConsumerError>(())
+```
+
+El ejemplo ejecutable está en
+[`examples/03-experiencia-del-consumidor.rs`](../examples/03-experiencia-del-consumidor.rs).
+El código de error permite una corrección específica; el cursor permite pedir
+la siguiente página sin exponer el desplazamiento o la consulta del proveedor.
+
+## Pruebas
+
+Las pruebas verifican que un error conserve código y detalle de campo, que una
+página mantenga orden y cursor, y que no pueda prometer un límite menor que sus
+elementos. El modelo no prueba consistencia de una base de datos; protege la
+estructura que un consumidor usa para reaccionar.
+
 ## Siguiente paso
 
-El modelo Rust representará un error con detalles seguros y una página con un
-cursor opaco, límite validado y orden declarado. No construirá serialización ni
-base de datos; hará visibles las invariantes que el consumidor necesita para
-recuperarse y recorrer resultados.
+El siguiente bloque añade ejercicios, solución y decisión de benchmark. Después
+el curso abordará la evolución de APIs y las compatibilidades que estos
+contratos deben sostener con el tiempo.
 
 ## Decisiones registradas
 
