@@ -126,10 +126,26 @@ Las pruebas aceptan una frontera sensible con mensaje seguro, rechazan detalles
 internos y rechazan entradas extensas. No sustituyen un análisis de amenazas;
 protegen la condición mínima que evita exponer una frontera interna.
 
+## Práctica
+
+Los ejercicios están en
+[`docs/ejercicios/09-seguridad-de-apis.md`](ejercicios/09-seguridad-de-apis.md)
+y la solución ejecutable en
+[`examples/soluciones/09-seguridad-de-apis.rs`](../examples/soluciones/09-seguridad-de-apis.rs).
+Antes de consultar la solución, identifica qué dato sensible protege la
+frontera y qué información nunca debe aparecer en el error público.
+
+## Benchmark
+
+La decisión de benchmark está en
+[`benches/09-seguridad-de-apis.md`](../benches/09-seguridad-de-apis.md).
+El modelo valida reglas pequeñas en memoria; medirlo no decide una amenaza ni
+la eficacia de una defensa en producción.
+
 ## Siguiente paso
 
-El siguiente bloque añadirá práctica, solución ejecutable y una decisión de
-benchmark. Después el curso cerrará con estrategia de APIs para sistemas reales.
+El siguiente capítulo cierra el curso con estrategia de APIs para sistemas
+reales.
 
 ## Decisiones registradas
 
