@@ -15,9 +15,9 @@ testing y HTTP; alimenta arquitectura, cloud, DevOps y dominios aplicados.
 
 ## Estado editorial
 
-El curso está en `planned`. El plan existe como milestones e issues, pero el
-contenido no está publicado. La revisión humana es obligatoria antes de usar
-`reviewed` o `published`.
+El curso está en `draft`. Los capítulos, ejemplos y prácticas están preparados
+para revisión humana; el contenido no está publicado. La revisión humana es
+obligatoria antes de usar `reviewed` o `published`.
 
 ## Cómo verificarlo
 
