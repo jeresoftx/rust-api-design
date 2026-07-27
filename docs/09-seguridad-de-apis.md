@@ -66,11 +66,70 @@ curso adopta la tercera alternativa.
 4. ¿Qué señal diferenciaría uso legítimo de abuso automatizado?
 5. ¿Qué evidencia permite investigar un incidente sin registrar un secreto?
 
+## De la entrada a la frontera
+
+Una frontera segura valida antes de ejecutar y decide qué error puede conocer
+el consumidor. Los detalles internos ayudan a depurar al proveedor, pero no
+deben viajar junto con datos sensibles ni convertirse en una pista para abuso.
+
+```mermaid
+flowchart LR
+    I[Entrada no confiable] --> V{Forma y tamaño válidos}
+    V -->|No| S[Mensaje seguro de rechazo]
+    V -->|Sí| A{Acción y recurso autorizados}
+    A -->|No| D[Denegación sin datos ajenos]
+    A -->|Sí| E[Ejecutar capacidad]
+    E --> L[Registrar señal sin secreto]
+```
+
+El archivo fuente está en
+[`diagrams/09-seguridad-de-apis.mmd`](../diagrams/09-seguridad-de-apis.mmd).
+El rechazo es parte del contrato: evita ejecutar datos inválidos y evita usar
+un mensaje interno como respuesta para el consumidor.
+
+## Implementación
+
+El módulo [`security_boundary`](../src/security_boundary.rs) representa una
+frontera por sensibilidad de entrada y exposición de error. Rechaza valores
+vacíos o extensos y prohíbe configurar detalles internos para una entrada
+sensible.
+
+No cifra datos ni identifica ataques por sí solo. Hace verificable una regla
+previa: una frontera de información sensible solo puede entregar mensajes
+seguros a quien consume la API.
+
+## Ejemplo: rechazar sin filtrar
+
+```rust
+use rust_api_design::security_boundary::{
+    DataSensitivity, ErrorExposure, SecurityBoundary,
+};
+
+let boundary = SecurityBoundary::new(
+    "importe",
+    DataSensitivity::Sensitive,
+    ErrorExposure::SafeMessage,
+)?;
+
+assert!(boundary.rejects(""));
+# Ok::<(), rust_api_design::security_boundary::SecurityError>(())
+```
+
+El ejemplo ejecutable está en
+[`examples/09-seguridad-de-apis.rs`](../examples/09-seguridad-de-apis.rs).
+La entrada se rechaza sin incluir consultas, rutas internas o secretos en la
+respuesta.
+
+## Pruebas
+
+Las pruebas aceptan una frontera sensible con mensaje seguro, rechazan detalles
+internos y rechazan entradas extensas. No sustituyen un análisis de amenazas;
+protegen la condición mínima que evita exponer una frontera interna.
+
 ## Siguiente paso
 
-El modelo Rust del capítulo representará una frontera de API por entrada,
-sensibilidad y exposición de error. No implementará criptografía ni un WAF;
-hace visible qué combinación de datos y respuesta debe rechazarse.
+El siguiente bloque añadirá práctica, solución ejecutable y una decisión de
+benchmark. Después el curso cerrará con estrategia de APIs para sistemas reales.
 
 ## Decisiones registradas
 
