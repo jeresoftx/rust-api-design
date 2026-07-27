@@ -124,13 +124,121 @@ Estas preguntas no sustituyen una especificación. Evitan que la especificación
 empiece demasiado tarde, cuando los consumidores ya convirtieron supuestos en
 dependencias.
 
+## Del diseño al contrato ejecutable
+
+El contrato puede escribirse antes de elegir protocolo o framework porque su
+responsabilidad no es transportar datos; es nombrar la frontera. El siguiente
+diagrama separa aquello que el consumidor necesita conocer de aquello que el
+proveedor conserva como libertad de implementación.
+
+```mermaid
+flowchart LR
+    C[Consumidor] --> Q[Solicita una capacidad]
+    Q --> K[Contrato público]
+    K --> I[Entradas con significado]
+    K --> O[Salidas observables]
+    K --> E[Errores accionables]
+    K -. no expone .-> P[Detalles privados]
+    P --> S[Proveedor puede evolucionar]
+    O --> C
+    E --> C
+```
+
+El archivo fuente está en
+[`diagrams/01-contratos-y-limites.mmd`](../diagrams/01-contratos-y-limites.mmd).
+El diagrama no afirma que todos los contratos tengan la misma forma. Señala un
+límite: las entradas, salidas y errores se explican al consumidor; la
+persistencia y la topología no se prometen por accidente.
+
+## Implementación
+
+El módulo [`contracts`](../src/contracts.rs) expresa este vocabulario sin
+introducir un servidor ni dependencias externas. `ApiContract` exige una
+capacidad y al menos una salida observable. `PublicField` obliga a declarar
+nombre, significado y presencia. `ActionableError` evita tratar todos los
+errores como texto opaco y `PrivateDetail` documenta qué permanece fuera de la
+promesa.
+
+El modelo también rechaza nombres repetidos entre entrada y salida. No es una
+regla universal para toda API real; es una restricción deliberada del primer
+modelo para que el lector note cuándo la misma palabra intenta significar dos
+cosas distintas en la frontera pública.
+
+## Ejemplo: consultar un pedido
+
+Un consumidor necesita consultar el estado de un pedido. Lo importante no es
+si el proveedor usa una base de datos, una caché o varios servicios. Lo que
+forma parte del contrato es qué identificador recibe, qué estado devuelve y
+qué puede hacer el consumidor si el pedido no existe.
+
+```rust
+use rust_api_design::contracts::{
+    ActionableError, ApiContract, Presence, PrivateDetail, PublicField,
+};
+
+let contract = ApiContract::new(
+    "consultar un pedido",
+    vec![PublicField::new(
+        "pedido_id",
+        "identificador estable del pedido",
+        Presence::Required,
+    )?],
+    vec![PublicField::new(
+        "estado",
+        "estado actual que el consumidor puede mostrar",
+        Presence::Required,
+    )?],
+    vec![ActionableError::new(
+        "pedido_no_encontrado",
+        "corregir el identificador o dejar de consultar",
+    )?],
+    vec![PrivateDetail::new(
+        "la estrategia de búsqueda y almacenamiento del pedido",
+    )?],
+)?;
+
+assert_eq!(contract.capability(), "consultar un pedido");
+# Ok::<(), rust_api_design::contracts::ContractError>(())
+```
+
+El ejemplo completo y ejecutable está en
+[`examples/01-contratos-publicos.rs`](../examples/01-contratos-publicos.rs).
+El consumidor puede depender de `pedido_id`, `estado` y
+`pedido_no_encontrado`. No debe depender de cómo se busca el pedido. Ese
+límite permite que el proveedor mejore su implementación sin renegociar la
+integración.
+
+## Complejidad
+
+El modelo no persigue complejidad algorítmica. Su costo relevante es cognitivo:
+cada campo o error público añade una promesa que habrá que explicar,
+compatibilizar y sostener. Un contrato más grande no es automáticamente más
+útil; suele ser más difícil de evolucionar.
+
+Por eso el capítulo parte de una capacidad y un resultado observable. La
+complejidad adicional solo se justifica cuando responde a una necesidad real
+del consumidor y puede expresarse con semántica clara.
+
+## Pruebas
+
+El módulo protege tres propiedades del ejemplo:
+
+- un contrato válido conserva una promesa observable y un límite privado;
+- un contrato sin salida se rechaza porque no explica qué puede esperar el
+  consumidor;
+- un nombre repetido en la frontera pública se rechaza para evitar ambigüedad.
+
+Además, el doctest de `ApiContract` y el ejemplo ejecutable se compilan como
+parte de la verificación del crate. La prueba no certifica que toda API esté
+bien diseñada; confirma que las invariantes didácticas de este modelo siguen
+vigentes.
+
 ## Siguiente paso
 
-El modelo Rust del capítulo representará una declaración mínima de capacidad,
-su entrada, resultados y límites. No intentará construir un servidor; hará
-visible la diferencia entre una promesa pública y un detalle privado. Después,
-el capítulo añadirá ejemplos, pruebas y ejercicios para convertir estas
-invariantes en evidencia ejecutable.
+Los siguientes capítulos aplicarán esta frontera a semántica HTTP, errores,
+paginación, compatibilidad y especificaciones ejecutables. Antes de elegir un
+estilo de API, cada decisión deberá conservar la pregunta central: ¿qué puede
+depender de esto un consumidor sin conocer la implementación?
 
 ## Decisiones registradas
 

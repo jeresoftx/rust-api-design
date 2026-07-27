@@ -1,0 +1,10 @@
+flowchart LR
+    C[Consumidor] --> Q[Solicita una capacidad]
+    Q --> K[Contrato público]
+    K --> I[Entradas con significado]
+    K --> O[Salidas observables]
+    K --> E[Errores accionables]
+    K -. no expone .-> P[Detalles privados]
+    P --> S[Proveedor puede evolucionar]
+    O --> C
+    E --> C
