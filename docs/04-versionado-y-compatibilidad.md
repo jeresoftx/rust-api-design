@@ -154,6 +154,21 @@ un cambio de significado y rechazan una migración innecesaria para una
 operación nueva. No prueban todos los consumidores reales; hacen ejecutable la
 distinción que guía una conversación de compatibilidad.
 
+## Práctica
+
+Los ejercicios están en
+[`docs/ejercicios/04-versionado-y-compatibilidad.md`](ejercicios/04-versionado-y-compatibilidad.md)
+y la solución ejecutable en
+[`examples/soluciones/04-versionado-y-compatibilidad.rs`](../examples/soluciones/04-versionado-y-compatibilidad.rs).
+
+## Benchmark
+
+La decisión de benchmark está en
+[`benches/04-versionado-y-compatibilidad.md`](../benches/04-versionado-y-compatibilidad.md).
+Clasificar un enum en memoria no responde una pregunta de costo de producto;
+la señal útil en este capítulo es la calidad de la transición, no su tiempo de
+ejecución.
+
 ## Siguiente paso
 
 El siguiente bloque añade ejercicios, solución y decisión de benchmark. Después
