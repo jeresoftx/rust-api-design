@@ -34,3 +34,7 @@ path = "examples/soluciones/05-contratos-ejecutables.rs"
 [[example]]
 name = "06-estilos-alternativos-solucion"
 path = "examples/soluciones/06-estilos-alternativos.rs"
+
+[[example]]
+name = "07-operacion-de-apis-solucion"
+path = "examples/soluciones/07-operacion-de-apis.rs"

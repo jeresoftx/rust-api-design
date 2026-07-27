@@ -175,11 +175,26 @@ También rechazan cache sin frescura y reintentos para operaciones no
 idempotentes. No prueban una red real; protegen las condiciones previas que
 evitan entregar datos engañosos o duplicar efectos bajo presión.
 
+## Práctica
+
+Los ejercicios están en
+[`docs/ejercicios/07-operacion-de-apis.md`](ejercicios/07-operacion-de-apis.md)
+y la solución ejecutable en
+[`examples/soluciones/07-operacion-de-apis.rs`](../examples/soluciones/07-operacion-de-apis.rs).
+Antes de consultar la solución, justifica qué señal de recuperación necesita el
+consumidor y por qué la operación puede o no puede repetirse automáticamente.
+
+## Benchmark
+
+La decisión de benchmark está en
+[`benches/07-operacion-de-apis.md`](../benches/07-operacion-de-apis.md).
+El modelo construye una política en memoria; medirlo no respondería una
+pregunta de capacidad, latencia o presión que cambie una decisión de producto.
+
 ## Siguiente paso
 
-El siguiente bloque añadirá práctica, solución ejecutable y una decisión de
-benchmark. Después el curso abordará identidad y acceso como fronteras que
-también forman parte del contrato de una API.
+El siguiente capítulo aborda identidad y acceso como fronteras que también
+forman parte del contrato de una API.
 
 ## Decisiones registradas
 
