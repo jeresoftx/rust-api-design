@@ -1,0 +1,8 @@
+flowchart LR
+    C[Consumidor] --> P[POST /pagos]
+    P --> K[Clave de idempotencia]
+    K --> S{Resultado}
+    S -->|201 Created| R[Recurso de pago]
+    S -->|202 Accepted| O[URI de operación]
+    O --> G[GET /operaciones/id]
+    G --> R

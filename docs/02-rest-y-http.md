@@ -123,12 +123,82 @@ consumidor después, no solo clasificar la falla.
    espera o un abandono?
 5. ¿Qué parte de la representación es estable y qué parte puede evolucionar?
 
+## Del recurso a una respuesta útil
+
+El consumidor no necesita conocer la implementación para seguir el flujo de
+una creación idempotente. Necesita saber qué recurso solicita, qué significa
+el resultado y cómo actuar si el trabajo continúa fuera de la respuesta.
+
+```mermaid
+flowchart LR
+    C[Consumidor] --> P[POST /pagos]
+    P --> K[Clave de idempotencia]
+    K --> S{Resultado}
+    S -->|201 Created| R[Recurso de pago]
+    S -->|202 Accepted| O[URI de operación]
+    O --> G[GET /operaciones/id]
+    G --> R
+```
+
+El archivo fuente vive en
+[`diagrams/02-rest-y-http.mmd`](../diagrams/02-rest-y-http.mmd). La clave no
+convierte por sí sola cualquier operación en segura: es una promesa adicional
+que el proveedor debe sostener al asociarla con la misma intención del cliente.
+
+## Implementación
+
+El módulo [`http`](../src/http.rs) no implementa handlers. Modela lo que un
+handler debe poder explicar: `HttpMethod` conserva seguridad e idempotencia,
+`HttpStatus` representa el resultado protocolario, `RetryPolicy` hace visible
+la regla de repetición y `FollowUpResource` obliga a dar una URI cuando se usa
+`202 Accepted`.
+
+El modelo rechaza un `GET` que comunica creación, un reintento de `POST` solo
+por semántica de método y una operación asíncrona sin seguimiento público. Son
+restricciones didácticas: su propósito es hacer que una contradicción se vea
+antes de que aparezca detrás de un framework.
+
+## Ejemplo: registrar un pago sin duplicarlo
+
+Una aplicación puede perder la conexión después de enviar un pago. Como no
+sabe si el servidor lo procesó, necesita una política que haga seguro repetir
+la intención. En este caso, `POST` comunica creación y la clave de
+idempotencia sostiene el reintento.
+
+```rust
+use rust_api_design::http::{HttpInteraction, HttpMethod, HttpStatus, RetryPolicy};
+
+let payment = HttpInteraction::new(
+    HttpMethod::Post,
+    HttpStatus::Created,
+    RetryPolicy::IdempotencyKey,
+    None,
+)?;
+
+assert_eq!(payment.status().code(), 201);
+# Ok::<(), rust_api_design::http::HttpDesignError>(())
+```
+
+Para trabajo que no termina de inmediato, `202 Accepted` debe incluir una URI
+de seguimiento. El ejemplo completo y ejecutable está en
+[`examples/02-rest-y-http.rs`](../examples/02-rest-y-http.rs).
+
+## Pruebas
+
+Las pruebas del módulo verifican una creación idempotente con `POST`, rechazan
+un `GET` que pretende crear, impiden declarar `POST` idempotente solo por el
+método y exigen seguimiento para una respuesta asíncrona. El doctest compila
+la forma mínima de una creación con `201`.
+
+Estas pruebas no certifican que una API sea REST. Protegen señales del
+contrato que un consumidor necesita para decidir si puede leer, reintentar o
+esperar.
+
 ## Siguiente paso
 
-El modelo Rust del capítulo representará una solicitud HTTP como intención,
-propiedad de reintento y resultado observable. No implementará un servidor:
-hará visible cuándo una combinación de método y estado contradice el contrato
-que pretende comunicar.
+El siguiente capítulo trabaja la experiencia del consumidor: errores,
+validación y paginación. Allí, los estados HTTP se complementarán con cuerpos
+de error consistentes y límites explícitos para recorrer colecciones.
 
 ## Decisiones registradas
 
