@@ -5,4 +5,5 @@
 
 pub mod consumer;
 pub mod contracts;
+pub mod evolution;
 pub mod http;
